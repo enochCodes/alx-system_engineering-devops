@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #print the Best School 10*
 counter=0
 
