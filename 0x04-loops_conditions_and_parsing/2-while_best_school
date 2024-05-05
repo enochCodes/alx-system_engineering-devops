@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#print the Best School 10*
 counter=0
 
 while [ $counter -lt 10 ]; do
