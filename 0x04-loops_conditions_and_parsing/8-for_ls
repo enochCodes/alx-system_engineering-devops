@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#print the Best School 10*
+for file in *; do
+    if [ -f "$file" ] && [[ "$file" == *-* ]]; then
+        echo "${file#*-}"
+    fi
+done
