@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-#print the Best School 10*
+# displays the content of the current working directory.
 
-for file in *; do
-	if [ -f "$file" ] && [[ "$file" == *-* ]]; then
-		echo "${file#*-}"
-	fi
+for i in *
+do
+    echo "$i" | cut -d'-' -f2
 done
