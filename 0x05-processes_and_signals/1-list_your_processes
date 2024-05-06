@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 #echo
-ps -ef --forest
+ps -eo user,pid,%cpu,%mem,vsz,rss,tty,stat,start,time,comm --forest
 
