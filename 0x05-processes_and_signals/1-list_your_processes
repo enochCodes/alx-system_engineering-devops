@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
-#echo
-ps -eo user,pid,%cpu,%mem,vsz,rss,tty,stat,start,time,comm --forest
+# Displays a list of currently running processes.
+#   Shows all processes, for all users, including those
+#+  which might not have a TTY.
 
+ps -auxf
