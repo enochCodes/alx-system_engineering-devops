@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Displays a list of currently with bash running processes.
+# shellcheck disable=SC2009
+
+for pid in $(pgrep bash); do
+	echo "$pid bash"
+done
