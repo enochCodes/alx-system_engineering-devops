@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
+# Script that displays all active IPv4 IPs on the machine it’s executed on.
 
-# Print only the IP addresses using awk
-# Get all active IPv4 IPs
-ip -o -4 addr show scope global | awk '{print $4}' | cut -d'/' -f1
+hostname -I | cut -d' ' -f1 ; hostname -i
