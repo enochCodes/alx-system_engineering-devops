@@ -1,15 +1,31 @@
 #!/usr/bin/env bash
-# Configure Nginx server so that /redirect_me is redirecting to another page
+# Configure nginx in a new Ubuntu machine with a permanent redirect
 
-# Install nginx
 sudo apt-get update
-sudo apt-get install -y nginx
+sudo apt-get install nginx -y
+echo "Hello World!" | sudo tee /usr/share/nginx/html/index.html
 
+new_config=\
+"server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+               root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
+        server_name _;
+        location / {
+                try_files \$uri \$uri/ =404;
+        }
+        
+        if (\$request_filename ~ redirect_me){
+            rewrite ^ https://www.youtube.com/@tpauldike permanent;
+        }
+}
+"
 
-# add the following configuration to the existing server block
-string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.unitylinksolutions.com/ permanent;"
-
-sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
-
-# Restart Nginx
-service nginx restart
+echo "$new_config" > /etc/nginx/sites-available/default
+if [ "$(pgrep nginx)" -le 0 ];
+then
+    service nginx start
+else
+    service nginx restart
+fi;
