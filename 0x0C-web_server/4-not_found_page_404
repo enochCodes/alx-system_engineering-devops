@@ -4,6 +4,9 @@
 # Serve a page that would return a Hello World string
 
 # Install nginx
+green='\033[0;32m'
+reset='\033[0m'
+
 sudo apt-get update
 sudo apt-get install -y nginx
 
