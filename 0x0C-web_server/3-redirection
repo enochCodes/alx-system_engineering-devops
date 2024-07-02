@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
-# Install nginx on web server; Nginx should be listening on port 80
-# redirects to another page
+# Configure Nginx server so that /redirect_me is redirecting to another page
 
-sudo apt-get -y update
-sudo apt-get -y install nginx
-sudo ufw allow 'Nginx HTTP'
-echo "Hello World!" > sudo /var/www/html/index.nginx-debian.html
-sed -i "37i\rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;" /etc/nginx/sites-available/default
-sudo service nginx start
+# Install nginx
+sudo apt-get update
+sudo apt-get install -y nginx
+
+
+# add the following configuration to the existing server block
+string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.unitylinksolutions.com/ permanent;"
+
+sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+
+# Restart Nginx
+service nginx restart
