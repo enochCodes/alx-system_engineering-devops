@@ -22,7 +22,7 @@ new_config=\
         }
 
         if (\$request_filename ~ redirect_me){
-            rewrite ^ https://www.youtube.com/@tpauldike permanent;
+            rewrite ^ https://www.unitylinksolutions.com permanent;
         }
 }
 "
