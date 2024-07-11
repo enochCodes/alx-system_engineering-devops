@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Fix the server to return "Hello Holberton" at the root
+
+# Ensure Apache is running
+service apache2 start
+
+# Create the index.html file with the required content
+echo "Hello Holberton" > /var/www/html/index.html
+
