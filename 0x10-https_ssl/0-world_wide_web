@@ -1,48 +1,25 @@
 #!/usr/bin/env bash
-# This script checks DNS records for specified subdomains of a given domain.
+# script to dig subdomain records for the domain specified
+# shellcheck disable=SC2027
+# shellcheck disable=SC2086
 
-# Function to retrieve and display DNS information
-get_dns_info() {
-    local domain="$1"
-    local subdomain="$2"
+function get_a_records(){
+    if [[ -n "$2" ]]; then
+        response="$(dig "$2.$1" | grep -i -A1 "answer section" | tail -n 1)"
+        destination="$(echo "$response" | awk '{ print $5 }')"
+        record_type="$(echo "$response" | awk '{ print $4 }')"
+        echo  "The subdomain "$2" is a "$record_type" record and points to "$destination""
 
-    if [ -z "$subdomain" ]; then
-        subdomains=("www" "lb-01" "web-01" "web-02")
     else
-        subdomains=("$subdomain")
+        subdomains=(www lb-01 web-01 web-02)
+        for sub_d in "${subdomains[@]}"; do
+            response="$(dig "$sub_d.$1" | grep -i -A1 "answer section" | tail -n 1)"
+            destination="$(echo ""$response"" | awk '{ print $5 }')"
+            record_type="$(echo """$response""" | awk '{ print $4 }')"
+            echo "The subdomain ""$sub_d"" is a ""$record_type"" record and points to ""$destination"""
+
+        done
     fi
-
-    for sub in "${subdomains[@]}"; do
-        # Fetch DNS records
-        result=$(dig "$sub.$domain" +short)
-
-        # Determine record type
-        if [[ -z "$result" ]]; then
-            echo "The subdomain $sub.$domain does not have any DNS record."
-        else
-            if [[ "$result" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-                record_type="A"
-            elif [[ "$result" =~ : ]]; then
-                record_type="AAAA"
-            else
-                record_type="CNAME"
-            fi
-
-            echo "The subdomain $sub.$domain is a $record_type record and points to $result"
-        fi
-    done
+ 
 }
-
-# Validate arguments
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 <domain> [<subdomain>]"
-    exit 1
-fi
-
-# Retrieve arguments
-domain="$1"
-subdomain="$2"
-
-# Call the function to get and display DNS information
-get_dns_info "$domain" "$subdomain"
-
+get_a_records "$1" "$2";
