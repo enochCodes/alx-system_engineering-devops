@@ -35,4 +35,4 @@ number_of_done_tasks = len(done_tasks)
 
 print(f"Employee {employee_name} id done with tasks ({number_of_done_tasks}):")
 for task in done_tasks:
-    print(f"/t {task.get('title')}")
+    print(f"     {task.get('title')}")
