@@ -1,53 +1,29 @@
-import json
-import requests
-import sys
+#!/usr/bin/python3
+"""Exports data in the JSON format"""
 
-if len(sys.argv) != 2:
-    print("Usage: python3 script.py <employee_id>")
-    sys.exit(1)
+if __name__ == "__main__":
 
-employee_id = int(sys.argv[1])
+    import json
+    import requests
+    import sys
 
-# URLs to fetch the user and todo data
-user_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-todos_url = f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
+    userId = sys.argv[1]
+    user = requests.get("https://jsonplaceholder.typicode.com/users/{}"
+                        .format(userId))
+    todos = requests.get('https://jsonplaceholder.typicode.com/todos')
+    todos = todos.json()
 
-# Fetch user data
-user_response = requests.get(user_url)
-if user_response.status_code != 200:
-    print("Failed to retrieve user data")
-    sys.exit(1)
+    todoUser = {}
+    taskList = []
 
-user_data = user_response.json()
+    for task in todos:
+        if task.get('userId') == int(userId):
+            taskDict = {"task": task.get('title'),
+                        "completed": task.get('completed'),
+                        "username": user.json().get('username')}
+            taskList.append(taskDict)
+    todoUser[userId] = taskList
 
-# Fetch todos data
-todos_response = requests.get(todos_url)
-if todos_response.status_code != 200:
-    print("Failed to retrieve todos data")
-    sys.exit(1)
-
-todos_data = todos_response.json()
-
-# Extract necessary information
-employee_name = user_data.get("username")
-
-# Prepare data for JSON export
-tasks = []
-for task in todos_data:
-    task_info = {
-        "task": task.get("title"),
-        "completed": task.get("completed"),
-        "username": employee_name
-    }
-    tasks.append(task_info)
-
-json_data = {str(employee_id): tasks}
-
-# Define the JSON filename
-json_filename = f"{employee_id}.json"
-
-# Write data to JSON file
-with open(json_filename, mode='w') as file:
-    json.dump(json_data, file)
-
-print(f"Data exported to {json_filename}")
+    filename = userId + '.json'
+    with open(filename, mode='w') as f:
+        json.dump(todoUser, f)
