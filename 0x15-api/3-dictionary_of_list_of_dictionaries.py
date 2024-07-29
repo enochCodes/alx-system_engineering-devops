@@ -6,6 +6,7 @@ dump all
 
 import json
 import requests
+import sys
 
 # URLs to fetch the users and todos data
 users_url = "https://jsonplaceholder.typicode.com/users"
