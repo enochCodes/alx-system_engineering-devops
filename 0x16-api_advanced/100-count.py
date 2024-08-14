@@ -1,58 +1,47 @@
 #!/usr/bin/python3
-"""Module for task 100"""
+"""Module for task 3"""
 
 
-def count_words(subreddit, word_list, after='', word_count={}):
-    """Recursively queries the Reddit API and counts keywords in titles."""
+def count_words(subreddit, word_list, word_count={}, after=None):
+    """Queries the Reddit API and returns the count of words in
+    word_list in the titles of all the hot posts
+    of the subreddit"""
     import requests
 
-    # Base URL
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {'User-Agent': 'Mozilla/5.0'}
-    params = {'limit': 100, 'after': after}
+    sub_info = requests.get("https://www.reddit.com/r/{}/hot.json"
+                            .format(subreddit),
+                            params={"after": after},
+                            headers={"User-Agent": "My-User-Agent"},
+                            allow_redirects=False)
+    if sub_info.status_code != 200:
+        return None
 
-    try:
-        # Make a GET request to the Reddit API
-        response = requests.get(
-                url, headers=headers, params=params, allow_redirects=False
-                )
+    info = sub_info.json()
 
-        if response.status_code != 200:
-            return
+    hot_l = [child.get("data").get("title")
+             for child in info
+             .get("data")
+             .get("children")]
+    if not hot_l:
+        return None
 
-        # Parse the response JSON
-        data = response.json()
-        children = data.get('data', {}).get('children', [])
+    word_list = list(dict.fromkeys(word_list))
 
-        # Initialize word count dictionary
-        if not word_count:
-            word_count = {word.lower(): 0 for word in word_list}
+    if word_count == {}:
+        word_count = {word: 0 for word in word_list}
 
-        # Iterate over the titles of hot posts
-        for child in children:
-            title = child.get('data', {}).get('title', '').lower().split()
-            for word in title:
-                if word in word_count:
+    for title in hot_l:
+        split_words = title.split(' ')
+        for word in word_list:
+            for s_word in split_words:
+                if s_word.lower() == word.lower():
                     word_count[word] += 1
 
-        # Handle pagination
-        after = data.get('data', {}).get('after')
-        if after:
-            return count_words(subreddit, word_list, after, word_count)
-        else:
-            # Sort and print the results
-            sorted_word_count = sorted(
-                    word_count.items(), key=lambda x: (-x[1], x[0])
-                    )
-            for word, count in sorted_word_count:
-                if count > 0:
-                    print(f"{word}: {count}")
-
-    except requests.RequestException as e:
-        return
-
-
-if __name__ == "__main__":
-    import sys
-    if len(sys.argv) >= 3:
-        count_words(sys.argv[1], [x for x in sys.argv[2].split()])
+    if not info.get("data").get("after"):
+        sorted_counts = sorted(word_count.items(), key=lambda kv: kv[0])
+        sorted_counts = sorted(word_count.items(),
+                               key=lambda kv: kv[1], reverse=True)
+        [print('{}: {}'.format(k, v)) for k, v in sorted_counts if v != 0]
+    else:
+        return count_words(subreddit, word_list, word_count,
+                           info.get("data").get("after"))
