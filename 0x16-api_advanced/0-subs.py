@@ -1,11 +1,13 @@
 #!/usr/bin/python3
-import requests
+"""Module for task 0"""
 
 
 def number_of_subscribers(subreddit):
     """
     Queries the Reddit API and returns
     """
+    import requests
+
     url = f"https://www.reddit.com/r/{subreddit}/about.json"
     headers = {'user-Agent': 'Mozilla/5.0'}
 

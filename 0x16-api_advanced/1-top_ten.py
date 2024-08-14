@@ -1,11 +1,13 @@
 #!/usr/bin/python3
-import requests
+"""Module for task 1"""
 
 
 def top_ten(subreddit):
     """
     Queries the Reddit API and returns
     """
+    import requests
+
     url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=10"
     headers = {'user-Agent': 'Mozilla/5.0'}
 

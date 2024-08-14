@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-
-import requests
+"""Module for task 100"""
 
 
 def count_words(subreddit, word_list, after='', word_count={}):
     """Recursively queries the Reddit API and counts keywords in titles."""
+    import requests
+
     # Base URL
     url = f"https://www.reddit.com/r/{subreddit}/hot.json"
     headers = {'User-Agent': 'Mozilla/5.0'}

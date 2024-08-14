@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-
-import requests
+"""Module for task 2"""
 
 
 def recurse(subreddit, hot_list=[]):
     """Recursively queries the reddit api"""
+    import requests
+
     url = f"https://www.reddit.com/r/{subreddit}/hot.json"
     headers = {'user-Agent': 'Mozilla/5.0'}
     params = {'limit': 100}
