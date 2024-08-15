@@ -1,12 +1,6 @@
-file { '/var/www/html/wp-content/uploads':
-  ensure => 'directory',
-  owner  => 'www-data',
-  group  => 'www-data',
-  mode   => '0755',
-}
+# Fixes bad `phpp` extensions to `php` in the WordPress file `wp-settings.php`.
 
-service { 'apache2':
-  ensure => 'running',
-  enable => true,
+exec { 'fix-wordpress':
+  command => 'sed -i s/phpp/php/g /var/www/html/wp-settings.php',
+  path    => '/usr/local/bin/:/bin/'
 }
-
